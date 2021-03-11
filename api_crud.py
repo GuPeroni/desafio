@@ -66,6 +66,8 @@ def inserir(nome: str, dta_nascimento: str, cpf: str, cep: str, token_autenticac
 @app.get('/listar_todos/{token_autenticacao}')
 def get_all(token_autenticacao: str):
 
+    lista_usr = []
+
     """
     RETORNA TODOS OS DADOS DO BANCO
 
@@ -83,7 +85,33 @@ def get_all(token_autenticacao: str):
             query = 'SELECT * from clientes'
             retorna_todos = db.retorna_consulta(query)
 
-            return retorna_todos
+            for retorna in retorna_todos:
+
+                id_usr = retorna[0]
+                nome = retorna[1]
+                data = retorna[2]
+                cpf = retorna[3]
+                cep = retorna[4]
+                rua = retorna[5]
+                bairro = retorna[6]
+                cidade = retorna[7]
+                estado = retorna[8]
+
+                monta_json = {
+                    'id': id_usr,
+                    'nome': nome,
+                    'data_nascimento': data,
+                    'cpf': cpf,
+                    'cep': cep,
+                    'rua': rua,
+                    'bairro': bairro,
+                    'cidade': cidade,
+                    'estado': estado
+                }
+
+                lista_usr.append(monta_json)
+            return lista_usr
+
         else:
             return {'Status': 400, 'Mensagem': 'Falha na autenticação'}
 
@@ -103,18 +131,44 @@ def usuario_especifico(nome_usuario: str, token_autenticacao: str):
 
     ret = db.retorna_consulta(query)
 
+    query1 = "SELECT * FROM clientes where nome = '{}'".format(nome_usuario)
+
+    retorna_dados = db.retorna_consulta(query1)
+
     for rets in ret:
         if token_autenticacao == rets[0]:
+            
+            if retorna_dados:
 
-            if nome_usuario:
-                query = "SELECT * FROM clientes where nome = '{}'".format(nome_usuario)
+                for retorna in retorna_dados:
 
-                retorna_dados = db.retorna_consulta(query)
+                    id_usr = retorna[0]
+                    nome = retorna[1]
+                    data = retorna[2]
+                    cpf = retorna[3]
+                    cep = retorna[4]
+                    rua = retorna[5]
+                    bairro = retorna[6]
+                    cidade = retorna[7]
+                    estado = retorna[8]
 
-                if not retorna_dados:
-                    return {'Status': 404, 'Mensagem': 'Usuario não encontrado'}
+                    monta_json = {
+                        'id': id_usr,
+                        'nome': nome,
+                        'data_nascimento': data,
+                        'cpf': cpf,
+                        'cep': cep,
+                        'rua': rua,
+                        'bairro': bairro,
+                        'cidade': cidade,
+                        'estado': estado
+                    }
 
-                return retorna_dados
+                    return monta_json
+
+            else:
+                return {'Status': 404, 'Mensagem': 'Usuario não encontrado'}
+
         else:
             return {'Status': 400, 'Mensagem': 'Falha na autenticação'}
 
@@ -149,7 +203,7 @@ def delete_user(id: str, token_autenticacao: str):
 
 # Atualiza os dados de acordo com o campo e o valor do campo que você passar            
 
-@app.put('/atualizar/{campo}/{valor_campo}/{id}/{token_autenticacao}')
+@app.patch('/atualizar/{campo}/{valor_campo}/{id}/{token_autenticacao}')
 def atualizar_dados(campo: str, valor_campo: str, id: str, token_autenticacao: str):
 
     """
