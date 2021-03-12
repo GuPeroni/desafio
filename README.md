@@ -6,6 +6,6 @@ How to install:
 
   pip install -r requirements.txt
   
-Projeto:
+Project:
 
   Criação de uma API usando FastAPI com conexão no BD postgres e utilizando Docker
