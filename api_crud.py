@@ -3,6 +3,10 @@ from app import app
 from db import Banco
 
 
+@app.get('/')
+def inicio():
+    return 'Utilizar o endereço 127.0.0.1:8000/docs'
+
 # Faz a inserção dos dados no banco com as validações que caso já tenha o cpf ele não add novamente e com outras validações também
 
 @app.post('/inserir_dados/{nome}/{dta_nascimento}/{cpf}/{cep}/{token_autenticacao}')
@@ -233,4 +237,4 @@ def atualizar_dados(campo: str, valor_campo: str, id: str, token_autenticacao: s
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)
