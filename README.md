@@ -4,7 +4,9 @@ DESAFIO 4Intelligence
 
 How to install:
 
-  pip install -r requirements.txt
+  pip install uvicorn
+  pip3 install psycopg2
+  pip3 install fastapi
   
 Projeto:
 
